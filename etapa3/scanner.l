@@ -4,6 +4,7 @@
 #include "hash.h"
 #include "ast.h"
 #include "y.tab.h"
+#include "decompiler.h"
 
 
 int running = 1;
@@ -72,6 +73,7 @@ void initMe(void);
 #include "y.tab.c"
 #include "hash.c"
 #include "ast.c"
+#include "decompiler.c"
 #include "main.c"
 
 
