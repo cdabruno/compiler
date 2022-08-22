@@ -33,12 +33,16 @@ int main(int argc, char **argv)
   
   initMe();
   yyparse();
-  hashPrint();
+  //hashPrint();
+
+
   setDeclaration(ast);
-  verifyDeclaration(ast);
-  checkAssignments(ast);
-  checkIdentifierUsage(ast);
   //printAst(ast, 0);
+  verifyDeclaration(ast);
+  checkIdentifierUsage(ast);
+  checkCommandTypesMatch(ast);
+  checkUseOfFunctions(ast, ast);
+  
   
 
   

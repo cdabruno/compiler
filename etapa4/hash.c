@@ -65,9 +65,8 @@ void hashPrint(void){
     
     int i;
     
-    for (i = 0; i < HASH_SIZE; ++i){
+    for (i = 0; i < HASH_SIZE; i++){
         Hash *list = table[i];
-
         if (list != NULL){
             printf("Table[%d]: ", i);
 
@@ -78,6 +77,7 @@ void hashPrint(void){
             printf("\n");
         }
     }
+    
 }
 
 Hash *hashFind(char *name){

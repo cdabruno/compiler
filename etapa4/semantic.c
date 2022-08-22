@@ -49,6 +49,25 @@ void setDeclaration(Ast *ast){
                         ast->children[1]->hashReference->datatype = DATATYPE_FLOAT;
                     }
                 }
+                int arr_type = ast->children[1]->hashReference->datatype;
+                if(ast->children[3] != NULL){
+                    switch (checkCorrectArrDeclaration(arr_type, atoi(ast->children[2]->hashReference->name), 0, ast->children[3])){
+                        case TOO_MANY_ARGS:
+                            printf("Semantic error, too many values for array %s size.\n", ast->children[1]->hashReference->name);
+                            semanticErrors++;
+                            break;
+                        case MISSING_ARGS:
+                            printf("Semantic error, missing values for array %s size.\n", ast->children[1]->hashReference->name);
+                            semanticErrors++;
+                            break;
+                        case INCORRECT_TYPE_ASSGN:
+                            printf("Semantic error, incorrect value type for array %s.\n", ast->children[1]->hashReference->name);
+                            semanticErrors++;
+                            break;
+                        default:
+                            break;
+                    }
+                }
                 for(int i = 0; i < MAX_SONS; i++){
                         setDeclaration(ast->children[i]);
                 }
@@ -261,15 +280,13 @@ int compatibleExpressionsNum(int expA, int expB){
 }
 
 int compatibleTypes(int expA, int expB){
-    if((isIntValue(expA) && isIntValue(expB)) || (expA == expB) ){
+    if((isIntValue(expA) && isIntValue(expB)) || (expA == expB && expA != DATATYPE_STRING) ){
         return 1;
     }
     else{
         return 0;
     }
 }
-
-
 
 void checkIdentifierUsage(Ast *ast){
     if(ast != NULL){
@@ -326,41 +343,144 @@ void checkCommandTypesMatch(Ast *ast){
                     semanticErrors++;
                 }
                 if(!isIntValue(getExpressionDatatype(ast->children[1]))){
-                    printf("Semantic error, array index must be an integer value.\n", ast->children[0]->hashReference->name);
+                    printf("Semantic error, array index must be an integer value.\n");
                     semanticErrors++;
                 }
                 break;
             case AST_IF:
                 if(getExpressionDatatype(ast->children[0]) != DATATYPE_BOOL){
-                    printf("Semantic error, IF expects boolean.\n", ast->children[0]->hashReference->name);
+                    printf("Semantic error, IF expects boolean.\n");
                     semanticErrors++;
                 }
                 break;
             case AST_IFE:
                 if(getExpressionDatatype(ast->children[0]) != DATATYPE_BOOL){
-                    printf("Semantic error, IF expects boolean.\n", ast->children[0]->hashReference->name);
+                    printf("Semantic error, IF expects boolean.\n");
                     semanticErrors++;
                 }
                 break;
             case AST_WHILE:
                 if(getExpressionDatatype(ast->children[0]) != DATATYPE_BOOL){
-                    printf("Semantic error, while expects boolean.\n", ast->children[0]->hashReference->name);
+                    printf("Semantic error, while expects boolean.\n");
                     semanticErrors++;
                 }
                 break;
             case AST_READ:
                 if(ast->children[0]->hashReference->type != SYMBOL_VAR){
-                    printf("Semantic error, incorrect use of identifier.\n", ast->children[0]->hashReference->name);
+                    printf("Semantic error, incorrect use of identifier %s.\n", ast->children[0]->hashReference->name);
                     semanticErrors++;
                 }
                 break;
             case AST_READ_ARR:
                 if(ast->children[0]->hashReference->type != SYMBOL_ARR){
-                    printf("Semantic error, incorrect use of identifier.\n", ast->children[0]->hashReference->name);
+                    printf("Semantic error, incorrect use of identifier %s.\n", ast->children[0]->hashReference->name);
                     semanticErrors++;
                 }
                 break;
         }
+    }
+}
+
+int checkCorrectArrDeclaration(int datatype, int size, int countingSize, Ast *literalLst){
+    if(literalLst == NULL){
+        if(size < countingSize){
+            return TOO_MANY_ARGS;
+        }
+        else if(size > countingSize){
+            return MISSING_ARGS;
+        }
+        else{
+            return ARR_DECLR_OK;
+        }
+    }
+    else{
+        if(compatibleTypes(getExpressionDatatype(literalLst->children[0]), datatype)){
+            countingSize++;
+            return checkCorrectArrDeclaration(datatype, size, countingSize, literalLst->children[1]);
+        }
+        else{
+            return INCORRECT_TYPE_ASSGN;
+        }
+    }
+}
+
+void checkUseOfFunctions(Ast *consumedAst, Ast *fullAst){
+
+    if(consumedAst != NULL){
+        if(consumedAst->type == AST_EXPR_FUNC_CALL){
+            Ast *functionDeclaration = findFunctionDeclaration(consumedAst->children[0]->hashReference->name, fullAst);           
+            if(functionDeclaration != NULL){
+                switch(isCorrectUseOfFunction(functionDeclaration->children[2], consumedAst->children[1])){
+                    case TOO_MANY_ARGS:
+                        printf("Semantic error, too many arguments for function %s.\n", consumedAst->children[0]->hashReference->name);
+                        semanticErrors++;
+                        break;
+                    case MISSING_ARGS:
+                        printf("Semantic error, missing arguments for function %s.\n", consumedAst->children[0]->hashReference->name);
+                        semanticErrors++;
+                        break;
+                    case INCORRECT_TYPE_ARGUMENT:
+                        printf("Semantic error, incorrect type arguments for function %s.\n", consumedAst->children[0]->hashReference->name);
+                        semanticErrors++;
+                        break;
+                }
+            }
+        }
+        for(int i = 0; i < MAX_SONS; i++){
+            checkUseOfFunctions(consumedAst->children[i], fullAst);
+        }
+    }
+}
+
+Ast* findFunctionDeclaration(char* functionName, Ast *ast){
+    if(ast != NULL){
+        if(ast->children[0]->type == AST_FUNC_DEC){
+            if(strcmp(ast->children[0]->children[1]->hashReference->name, functionName) == 0){
+                return ast->children[0];
+            }
+            else{
+                return findFunctionDeclaration(functionName, ast->children[1]);
+            }
+        }
+        else{
+            return findFunctionDeclaration(functionName, ast->children[1]);
+        }
+    }
+    else{
+        return NULL;
+    }
+}
+
+int isCorrectUseOfFunction(Ast *parameterList, Ast *argumentList){
+    if(parameterList == NULL && argumentList == NULL){
+        return FUNC_CALL_OK;
+    }
+    else if(parameterList == NULL && argumentList != NULL){
+         return TOO_MANY_ARGS;
+    }
+    else if(parameterList != NULL && argumentList == NULL){
+         return MISSING_ARGS;
+    }
+    else if(compatibleTypes(castKWtoDatatype(parameterList->children[0]->children[0]->type), getExpressionDatatype(argumentList->children[0]))){
+        return isCorrectUseOfFunction(parameterList->children[1], argumentList->children[1]);
+    }
+    else{
+        printf("%d, %d\n", parameterList->children[0]->children[0]->type, getExpressionDatatype(argumentList->children[0]));
+        return INCORRECT_TYPE_ARGUMENT;
+    }
+}
+
+int castKWtoDatatype(int keyword){
+    switch(keyword){
+        case AST_KW_CHAR:
+            return DATATYPE_CHAR;
+            break;
+        case AST_KW_INT:
+            return DATATYPE_INT;
+            break;
+        case AST_KW_FLOAT:
+            return DATATYPE_FLOAT;
+            break;
     }
 }
 
