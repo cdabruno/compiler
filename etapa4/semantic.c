@@ -332,6 +332,7 @@ void checkCommandTypesMatch(Ast *ast){
     if(ast != NULL){
         switch(ast->type){
             case AST_ASSIGN:
+                //printf("%s, %d, %d\n", ast->children[0]->hashReference->name, getExpressionDatatype(ast->children[0]), getExpressionDatatype(ast->children[1]));
                 if(!compatibleTypes(getExpressionDatatype(ast->children[0]), getExpressionDatatype(ast->children[1]))){
                     printf("Semantic error, incompatible types for assignment of variable %s.\n", ast->children[0]->hashReference->name);
                     semanticErrors++;
@@ -377,6 +378,9 @@ void checkCommandTypesMatch(Ast *ast){
                     semanticErrors++;
                 }
                 break;
+        }
+        for(int i = 0; i < MAX_SONS; i++){
+            checkCommandTypesMatch(ast->children[i]);
         }
     }
 }
@@ -482,5 +486,40 @@ int castKWtoDatatype(int keyword){
             return DATATYPE_FLOAT;
             break;
     }
+}
+
+void checkReturnType(Ast *ast){
+    if(ast != NULL){
+        if(ast->type == AST_FUNC_DEC){
+            int datatype = castKWtoDatatype(ast->children[0]->type);
+            checkFunctionReturns(ast->children[3], datatype);
+        }
+        for(int i = 0; i < MAX_SONS; i++){
+            checkReturnType(ast->children[i]);
+        }
+    }
+}
+
+void checkFunctionReturns(Ast *commandList, int datatype){
+    if(commandList != NULL){
+        if(commandList->type == AST_RETURN){
+            if(!compatibleTypes(getExpressionDatatype(commandList->children[0]), datatype)){
+                printf("Semantic error, return type does not match function type declared.\n");
+                semanticErrors++;
+            }
+        }
+        for(int i = 0; i < MAX_SONS; i++){
+            checkFunctionReturns(commandList->children[i], datatype);
+        }
+    }
+}
+
+void semanticAnalysis(Ast *ast){
+    setDeclaration(ast);
+    verifyDeclaration(ast);
+    checkIdentifierUsage(ast);
+    checkCommandTypesMatch(ast);
+    checkUseOfFunctions(ast, ast);
+    checkReturnType(ast);
 }
 

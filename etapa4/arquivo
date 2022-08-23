@@ -18,7 +18,7 @@ int main ()
   a <- 2,5;
   a <- a - i;
   a <- 'x';
-  b <- 2;
+ ## b <- 2;
   v[a] <- 55;
   print v[2];
   print a a;
@@ -31,11 +31,11 @@ int main ()
 
   while (i<10)
     {
-    i <- incn(1);
-    a <- incn(a a);
+    i <- incn();
+    a <- incn();
     };
 
-  print "Incrementado algumas vezes a fica " (2+x)a "\n";
+ ## print "Incrementado algumas vezes a fica " (2+x)a "\n";
 
   if (a == 15)
     {
@@ -51,9 +51,9 @@ int main ()
     print "OK!\n"; {{}}
   }
 
-int incn (int x int n )
+int incn ()
   {
-  return x + n
+  return 3,5
   }
 
 ## end of file

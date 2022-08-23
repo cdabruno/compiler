@@ -1,8 +1,8 @@
 # Made by Bruno Correa and Alexadre Crestani
 
 # prepares our project to send to the professor as a .tgz file
-tgz: clean_compiled
-	tar cvzf etapa4.tgz *
+tgz: clean
+	tar cvzf etapa4.tgz .
 
 # clean tgz generated file
 clean_tgz:

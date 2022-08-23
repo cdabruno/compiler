@@ -73,6 +73,8 @@ void printAst(Ast *node, int level){
             printf(" %s", node->hashReference->name);
             printf(" %d", node->hashReference->type);
         }
+
+        printf(" %d", getExpressionDatatype(node));
         
 
         printf("\n");

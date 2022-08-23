@@ -15,6 +15,7 @@ void initMe(void);
 extern Ast *ast;
 extern char *yytext;
 extern FILE *yyin;
+extern int semanticErrors;
 
 int main(int argc, char **argv)
 {
@@ -33,20 +34,17 @@ int main(int argc, char **argv)
   
   initMe();
   yyparse();
-  //hashPrint();
+  hashPrint();
 
-
-  setDeclaration(ast);
   //printAst(ast, 0);
-  verifyDeclaration(ast);
-  checkIdentifierUsage(ast);
-  checkCommandTypesMatch(ast);
-  checkUseOfFunctions(ast, ast);
+  semanticAnalysis(ast);
   
-  
+  if(semanticErrors > 0){
+    exit(4);
+  }
 
   
-  //decompile(ast, outFile);
+  decompile(ast, outFile);
 
   exit(0);
 }

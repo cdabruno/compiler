@@ -24,5 +24,9 @@ void checkUseOfFunctions(Ast *consumedAst, Ast *fullAst);
 Ast* findFunctionDeclaration(char* functionName, Ast *ast);
 int isCorrectUseOfFunction(Ast *parameterList, Ast *argumentList);
 int castKWtoDatatype(int keyword);
+void checkReturnType(Ast *ast);
+void checkFunctionReturns(Ast *commandList, int datatype);
+
+void semanticAnalysis(Ast *ast);
 
 #endif
