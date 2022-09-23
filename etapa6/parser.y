@@ -79,9 +79,16 @@ declaration_lst: declaration declaration_lst { $$ = createAstNode(AST_DECL, 0, $
     | { $$ = 0; }
     ;
     
-declaration: type_kw TK_IDENTIFIER '(' literal ')' ';' { $$ = createAstNode(AST_VAR_DEC, 0, $1, createAstNode(AST_IDENTIFIER, $2, 0, 0, 0, 0, getLineNumber()), $4, 0, getLineNumber()); }
+declaration: type_kw TK_IDENTIFIER '(' literal ')' ';' { $$ = createAstNode(AST_VAR_DEC, 0, $1, createAstNode(AST_IDENTIFIER, $2, 0, 0, 0, 0, getLineNumber()), $4, 0, getLineNumber()); 
+                                                         char temp[30];
+                                                         sprintf(temp, "_%s:\t.long\t%s\n", $2->name, $4->hashReference->name);
+                                                         addToDeclaration(temp); }
     | type_kw TK_IDENTIFIER '[' LIT_INTEGER ']' literals_lst ';' { $$ = createAstNode(AST_ARR_DEC, 0, $1, createAstNode(AST_IDENTIFIER, $2, 0, 0, 0, 0, getLineNumber()), 
-                                                                    createAstNode(AST_INT, $4, 0, 0, 0, 0, getLineNumber()), $6, getLineNumber()); }
+                                                                    createAstNode(AST_INT, $4, 0, 0, 0, 0, getLineNumber()), $6, getLineNumber()); 
+                                                         char temp[30];
+                                                         sprintf(temp, "_%s:\n", $2->name);
+                                                         addToArrDeclaration(temp);
+                                                         addArrToString(); }
     | type_kw TK_IDENTIFIER '(' parameters_lst ')' '{' command_lst '}' { $$ = createAstNode(AST_FUNC_DEC, 0, $1, createAstNode(AST_IDENTIFIER, $2, 0, 0, 0, 0, getLineNumber()),
                                                                             $4, $7, getLineNumber()); }
     | ';' { $$ = 0; }
@@ -97,7 +104,11 @@ type_kw: KW_CHAR { $$ = createAstNode(AST_KW_CHAR, 0, 0, 0, 0, 0, getLineNumber(
     | KW_FLOAT { $$ = createAstNode(AST_KW_FLOAT, 0, 0, 0, 0, 0, getLineNumber()); }
     ;
 
-literals_lst: literal literals_lst { $$ = createAstNode(AST_LIT_LIST, 0, $1, $2, 0, 0, getLineNumber()); }
+literals_lst: literal literals_lst { $$ = createAstNode(AST_LIT_LIST, 0, $1, $2, 0, 0, getLineNumber()); 
+                                    char temp[30];
+                                    sprintf(temp, "\t.long\t%s\n", $1->hashReference->name);
+                                    addToArrDeclaration(temp);
+                                    }
     | { $$ = 0; }
     ;
 
@@ -105,7 +116,10 @@ parameters_lst: parameters parameters_lst { $$ = createAstNode(AST_PARAM_LIST, 0
     | { $$ = 0; }
     ;
 
-parameters: type_kw TK_IDENTIFIER { $$ = createAstNode(AST_PARAM, 0, $1, createAstNode(AST_IDENTIFIER, $2, 0, 0, 0, 0, getLineNumber()), 0, 0, getLineNumber()); }
+parameters: type_kw TK_IDENTIFIER { $$ = createAstNode(AST_PARAM, 0, $1, createAstNode(AST_IDENTIFIER, $2, 0, 0, 0, 0, getLineNumber()), 0, 0, getLineNumber());
+                                char temp[30];
+                                sprintf(temp, "_%s:\t.long\t0\n", $2->name);
+                                addToDeclaration(temp); }
     ;
 
 command: '{' command_lst '}' { $$ = createAstNode(AST_COMMAND_BLOCK, 0, $2, 0, 0, 0, getLineNumber()); }

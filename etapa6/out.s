@@ -21,6 +21,15 @@ _funz:
 pushq  %rbp
 movq   %rsp, %rbp
 
+## TAC_READ
+leaq	_x(%rip), %rsi
+leaq	.printintstring(%rip), %rdi
+movl	$0, %eax
+call	__isoc99_scanf@PLT
+
+## TAC_RETURN
+movl   _x(%rip), %eax
+
 ## TAC_FUNC_END
 popq   %rbp
 ret
@@ -55,6 +64,7 @@ movl	%eax, _n(%rip)
 ## TAC_FUNC_CALL
 movl   $0, %eax
 call   _funz
+movl   %eax, _tempVar_0(%rip)
 
 ## TAC_PRINT_LIST
 movl	_tempVar_0(%rip), %eax
@@ -92,18 +102,15 @@ leaq	.printstring(%rip), %rdi
 movl	$0, %eax
 call	printf@PLT
 
-## TAC_AND
-movl   _1(%rip), %eax
-testl  %eax, %eax
-je     _and0
+## TAC_callparams
+movl   _2(%rip), %eax
+movl	%eax, _z(%rip)
+## TAC_callparams
 movl   _3(%rip), %eax
-testl  %eax, %eax
-je     _and0
-movl   $1, %eax
-jmp    _and1
-_and0:
+movl	%eax, _n(%rip)
+## TAC_FUNC_CALL
 movl   $0, %eax
-_and1:
+call   _funz
 movl   %eax, _tempVar_1(%rip)
 
 ## TAC_PRINT_LIST
@@ -133,15 +140,19 @@ _2:	.long	2
 _3:	.long	3
 _5:	.long	5
 _tempVar_0:	.long	0
-_a:	.long	0
-_b:	.long	0
-_j:	.long	0
-_n:	.long	0
 _tempVar_1:	.long	0
-_x:	.long	0
-_z:	.long	0
+_97:	.long	97
 _str15:	.string	"LLEGAL DEMAIS"
 	.zero
 _str10:	.string	"testando"
 	.zero
 _777:	.long	777
+_a:	.long	97
+_b:	.long	1
+_x:	.long	1
+_l:
+	.long	1
+	.long	2
+_z:	.long	0
+_n:	.long	0
+_j:	.long	0

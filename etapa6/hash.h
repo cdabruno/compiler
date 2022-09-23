@@ -57,5 +57,11 @@ Hash *makeLabel();
 
 void printASM(FILE* fout);
 
+void addToDeclaration(char *text);
+
+void addToArrDeclaration(char *text);
+
+void addArrToString();
+
 
 #endif

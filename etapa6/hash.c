@@ -4,6 +4,9 @@
 
 Hash **table;
 
+static char declarationsString[10000] = "";
+static char arrDeclaration[1000] = "";
+
 void hashInit(void){
     table = (Hash **) calloc(HASH_SIZE, sizeof(Hash *));
 }
@@ -118,23 +121,46 @@ void printASM(FILE* fout){
       ".data\n\n");
 
 
-   for (int i=0; i<HASH_SIZE; i++)
-      for (node = table[i]; node; node=node->next)
-         switch (node->type)
-         {
+   for (int i=0; i<HASH_SIZE; i++){
+      for (node = table[i]; node; node=node->next){
+        switch (node->type)
+        {
             case SYMBOL_VAR:
-               fprintf(fout, "_%s:\t.long\t0\n", node->name);
-               break;
+            if(strstr(node->name, "tempVar")){
+                fprintf(fout, "_%s:\t.long\t0\n", node->name);
+            }
+            break;
             case SYMBOL_LIT_INT:
             case SYMBOL_LIT_CHAR: 
             case SYMBOL_LIT_FLOAT:
-               fprintf(fout, "_%s:\t.long\t%s\n", node->name, node->name);
-               break;
+            fprintf(fout, "_%s:\t.long\t%s\n", node->name, node->name);
+            break;
             case SYMBOL_LIT_STRING:
                 fprintf(fout, "_%s%ld:\t.string\t%s\n\t.zero\n", "str", strlen(node->name), node->name);
-               break;
+            break;
             default:
-               break;
-         }
-      fflush(fout);
+            break;
+        }
+      }
+    }
+    fprintf(fout, "%s", declarationsString);
+    fflush(fout);
+}
+
+void addToDeclaration(char *text){
+    strcat(declarationsString, text);
+}
+
+void addToArrDeclaration(char *text){
+    char auxString[1000];
+    strcpy(auxString, text);
+    strcat(auxString, arrDeclaration);
+    strcpy(arrDeclaration, auxString);
+
+}
+
+void addArrToString(){
+    strcat(declarationsString, arrDeclaration);
+    char empty[1000] = "";
+    strcpy(arrDeclaration, empty);
 }

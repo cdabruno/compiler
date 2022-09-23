@@ -1,8 +1,8 @@
 #include <stdio.h>
 
-char legal[5] = "aaa";
+int legal[5] = {1, 2, 3};
 
 
 int main(){
-    printf("%s", legal);
+    return(1);
 }

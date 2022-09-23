@@ -167,7 +167,8 @@ void generateASM(Tac *first){
                 break;
             case TAC_FUNC_CALL : fprintf(fout, "\n## TAC_FUNC_CALL\n"
                 "movl   $0, %%eax\n"
-                "call   _%s\n", tac->op1->name);
+                "call   _%s\n" 
+                "movl   %%eax, _%s(%%rip)\n", tac->op1->name, tac->result->name);
                 break;
             case TAC_FUNC_ARG: fprintf(fout, "\n## TAC_callparams\n"
                 "movl   _%s(%%rip), %%eax\n"
@@ -231,8 +232,7 @@ void generateASM(Tac *first){
             "movzbl	%d+_%s(%%rip), %%eax\n"
 	        "movb	%%al, _%s(%%rip)\n", 4 * atoi(tac->op2->name), tac->op1->name, tac->result->name); break;
             case TAC_RETURN : fprintf(fout, "\n## TAC_RETURN\n"
-                "movl   %%edi, -4(%%rbp)\n"
-                "movl   _%s(%%rip), %%eax\n", tac->op1->name);
+                "movl   _%s(%%rip), %%eax\n", tac->result->name);
                 break;
             case TAC_FUNC_BEGIN : 
             if(strcmp(tac->result->name, "main") == 0){
