@@ -1,0 +1,17 @@
+char a (1);
+int b (1);
+int x (1);
+
+int funz(int z int n){;}
+
+int fun(int j){
+    a <- 5;
+    b <- 777;
+    print x funz(2 3);
+}
+
+int main(){
+    print b "LLEGAL DEMAIS" "testando" 1&3 a;
+}
+
+

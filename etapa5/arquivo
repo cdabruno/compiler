@@ -15,9 +15,10 @@ of multiple lines
 
 int main ()
   {
-  a <- 2,5;
+  c <- 'x';
+  a <- 2;
   a <- a - i;
-  a <- 'x';
+  a <- 5;
  ## b <- 2;
   v[a] <- 55;
   print v[2];
@@ -27,7 +28,7 @@ int main ()
   print "Digite um numero: \n";
   read a;
   print "Digite mais um numero: \n";
-  read v;
+  read v[1];
 
   while (i<10)
     {
@@ -55,7 +56,7 @@ int incn (int x int n)
   {
   n <- 2;
   x <- n - 1;
-  return 3,5
+  return 3
   }
 
 ## end of file
