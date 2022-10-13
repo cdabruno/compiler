@@ -49,40 +49,40 @@ void generateASM(Tac *first){
             case TAC_DIV : fprintf(fout, "\n## TAC_DIV\n"
                 "movl   _%s(%%rip), %%eax\n"
                 "movl	_%s(%%rip), %%ecx\n"
-                "cltd"
+                "cltd\n"
                 "idivl	%%ecx\n"
                 "movl	%%eax, _%s(%%rip)\n", tac->op1->name, tac->op2->name, tac->result->name);
                 break;
             case TAC_LE : fprintf(fout, "\n## TAC_LE\n"
                 "movl   _%s(%%rip), %%edx\n"
                 "movl   _%s(%%rip), %%eax\n"
-                "cmp    %%eax, %%edx"
-                "setle  %%al"
-                "movzbl	%%al, %%eax"
+                "cmp    %%eax, %%edx\n"
+                "setle  %%al\n"
+                "movzbl	%%al, %%eax\n"
 	            "movl	%%eax, _%s(%%rip)", tac->op1->name, tac->op2->name, tac->result->name);
                 break;
             case TAC_GE : fprintf(fout, "\n## TAC_GE\n"
                 "movl   _%s(%%rip), %%edx\n"
                 "movl   _%s(%%rip), %%eax\n"
-                "cmp    %%eax, %%edx"
-                "setge  %%al"
-                "movzbl	%%al, %%eax"
+                "cmp    %%eax, %%edx\n"
+                "setge  %%al\n"
+                "movzbl	%%al, %%eax\n"
 	            "movl	%%eax, _%s(%%rip)", tac->op1->name, tac->op2->name, tac->result->name);
                 break;
             case TAC_EQ : fprintf(fout, "\n## TAC_EQ\n"
                 "movl   _%s(%%rip), %%edx\n"
                 "movl   _%s(%%rip), %%eax\n"
-                "cmp    %%eax, %%edx"
-                "sete  %%al"
-                "movzbl	%%al, %%eax"
+                "cmp    %%eax, %%edx\n"
+                "sete  %%al\n"
+                "movzbl	%%al, %%eax\n"
 	            "movl	%%eax, _%s(%%rip)", tac->op1->name, tac->op2->name, tac->result->name);
                 break;            
             case TAC_DIFF : fprintf(fout, "\n## TAC_DIFF\n"
                 "movl   _%s(%%rip), %%edx\n"
                 "movl   _%s(%%rip), %%eax\n"
-                "cmp    %%eax, %%edx"
-                "setne  %%al"
-                "movzbl	%%al, %%eax"
+                "cmp    %%eax, %%edx\n"
+                "setne  %%al\n"
+                "movzbl	%%al, %%eax\n"
 	            "movl	%%eax, _%s(%%rip)", tac->op1->name, tac->op2->name, tac->result->name);
                 break;
             case TAC_COPY : fprintf(fout, "\n## TAC_COPY\n"
@@ -90,8 +90,8 @@ void generateASM(Tac *first){
                 "movl	%%eax, _%s(%%rip)", tac->op1->name, tac->result->name);
                 break;
             case TAC_JUMP_FALSE : fprintf(fout, "\n## TAC_JUMP_FALSE\n"
-                "movl   _%s(%%rip) %%eax\n"
-                "cmpl   $1 %%eax\n"
+                "movl   _%s(%%rip), %%eax\n"
+                "cmpl   $1, %%eax\n"
                 "jne    _%s", tac->op1->name, tac->result->name);
                 break;
             case TAC_LABEL : fprintf(fout, "\n## TAC_LABEL\n"
@@ -103,17 +103,17 @@ void generateASM(Tac *first){
             case TAC_GT : fprintf(fout, "\n## TAC_GT\n"
                 "movl   _%s(%%rip), %%edx\n"
                 "movl   _%s(%%rip), %%eax\n"
-                "cmp    %%eax, %%edx"
-                "setg  %%al"
-                "movzbl	%%al, %%eax"
+                "cmp    %%eax, %%edx\n"
+                "setg  %%al\n"
+                "movzbl	%%al, %%eax\n"
 	            "movl	%%eax, _%s(%%rip)", tac->op1->name, tac->op2->name, tac->result->name);
                 break;
             case TAC_LT : fprintf(fout, "\n## TAC_LT\n"
                 "movl   _%s(%%rip), %%edx\n"
                 "movl   _%s(%%rip), %%eax\n"
-                "cmp    %%eax, %%edx"
-                "setl  %%al"
-                "movzbl	%%al, %%eax"
+                "cmp    %%eax, %%edx\n"
+                "setl  %%al\n"
+                "movzbl	%%al, %%eax\n"
 	            "movl	%%eax, _%s(%%rip)", tac->op1->name, tac->op2->name, tac->result->name);
                 break;
             case TAC_AND: 

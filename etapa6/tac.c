@@ -261,7 +261,7 @@ Tac *addArgumentsNames(Tac *tac){
             if (result->type == TAC_FUNC_CALL){
                 if(result->prev? result->prev->type == TAC_FUNC_ARG : 0){
                     Tac *iteratingTac;
-                    for(iteratingTac = result->prev->prev; iteratingTac->type != TAC_FUNC_BEGIN || strcmp(iteratingTac->result->name, result->op1->name); iteratingTac = iteratingTac->prev);
+                    for(iteratingTac = tac; iteratingTac->type != TAC_FUNC_BEGIN || strcmp(iteratingTac->result->name, result->op1->name); iteratingTac = iteratingTac->prev);                 
                     iteratingTac = iteratingTac->prev;
                     for(Tac *funcCallArgs = result->prev; funcCallArgs->type == TAC_FUNC_ARG || funcCallArgs->type == TAC_SYMBOL; funcCallArgs = funcCallArgs->prev){
                         if(funcCallArgs->type == TAC_FUNC_ARG){

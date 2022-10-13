@@ -6,7 +6,7 @@ int a ('A');
 int i(1);
 int v[10] 'a' 0 0 0 0 0 0 0 0 0;
 int matrix[100]; 
-float f (2,5);
+##float f (2,5);
 
 \#
 This is a comment 
@@ -30,10 +30,10 @@ int main ()
   print "Digite mais um numero: \n";
   read v[1];
 
-  while (i<10)
+  while (i > 0)
     {
-    i <- incn(1 2);
-    a <- incn(3 4);
+    i <- incn(i);
+    print "a\n";
     };
 
  ## print "Incrementado algumas vezes a fica " (2+x)a "\n";
@@ -52,11 +52,10 @@ int main ()
     print "OK!\n"; {{}}
   }
 
-int incn (int x int n)
+int incn (int x)
   {
-  n <- 2;
-  x <- x + n - 1;
-  return 3
+  x <- x + 1;
+  return x
   }
 
 ## end of file
