@@ -130,9 +130,11 @@ void printASM(FILE* fout){
                 fprintf(fout, "_%s:\t.long\t0\n", node->name);
             }
             break;
+            case SYMBOL_LIT_FLOAT:
+            fprintf(fout, "_%df:\t.long\t%d\n", (int) atof(node->name), (int) atof(node->name));
+            break;
             case SYMBOL_LIT_INT:
             case SYMBOL_LIT_CHAR: 
-            case SYMBOL_LIT_FLOAT:
             fprintf(fout, "_%s:\t.long\t%s\n", node->name, node->name);
             break;
             case SYMBOL_LIT_STRING:

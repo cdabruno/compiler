@@ -81,6 +81,13 @@ movl	$0, %eax
 call	__isoc99_scanf@PLT
 
 ## TAC_PRINT_LIST
+movl	_f(%rip), %eax
+movl	%eax, %esi
+leaq	.printintstring(%rip), %rdi
+movl	$0, %eax
+call	printf@PLT
+
+## TAC_PRINT_LIST
 leaq	_str27(%rip), %rsi
 leaq	.printstring(%rip), %rdi
 movl	$0, %eax
@@ -92,17 +99,31 @@ leaq	.printintstring(%rip), %rdi
 movl	$0, %eax
 call	__isoc99_scanf@PLT
 
+## TAC_callparams
+movl   _8(%rip), %eax
+movl	%eax, _z(%rip)
+## TAC_callparams
+movl   _'k'(%rip), %eax
+movl	%eax, _b(%rip)
+## TAC_FUNC_CALL
+movl   $0, %eax
+call   _carlos
+movl   %eax, _tempVar_2(%rip)
+
+## TAC_COPY
+movl   _tempVar_2(%rip), %eax
+movl	%eax, _a(%rip)
 ## TAC_LABEL
 _label_0:
-## TAC_GT
+## TAC_LT
 movl   _i(%rip), %edx
 movl   _0(%rip), %eax
 cmp    %eax, %edx
-setg  %al
+setl  %al
 movzbl	%al, %eax
-movl	%eax, _tempVar_2(%rip)
+movl	%eax, _tempVar_3(%rip)
 ## TAC_JUMP_FALSE
-movl   _tempVar_2(%rip), %eax
+movl   _tempVar_3(%rip), %eax
 cmpl   $1, %eax
 jne    _label_1
 ## TAC_callparams
@@ -111,10 +132,10 @@ movl	%eax, _x(%rip)
 ## TAC_FUNC_CALL
 movl   $0, %eax
 call   _incn
-movl   %eax, _tempVar_3(%rip)
+movl   %eax, _tempVar_4(%rip)
 
 ## TAC_COPY
-movl   _tempVar_3(%rip), %eax
+movl   _tempVar_4(%rip), %eax
 movl	%eax, _i(%rip)
 ## TAC_PRINT_LIST
 leaq	_str5(%rip), %rsi
@@ -132,19 +153,19 @@ movl   _15(%rip), %eax
 cmp    %eax, %edx
 sete  %al
 movzbl	%al, %eax
-movl	%eax, _tempVar_4(%rip)
+movl	%eax, _tempVar_5(%rip)
 ## TAC_JUMP_FALSE
-movl   _tempVar_4(%rip), %eax
+movl   _tempVar_5(%rip), %eax
 cmpl   $1, %eax
 jne    _label_2
 ## TAC_SUM
 movl   _a(%rip), %edx
 movl	_1(%rip), %eax
 addl	%edx, %eax
-movl	%eax, _tempVar_5(%rip)
+movl	%eax, _tempVar_6(%rip)
 
 ## TAC_COPY
-movl   _tempVar_5(%rip), %eax
+movl   _tempVar_6(%rip), %eax
 movl	%eax, _a(%rip)
 ## TAC_PRINT_LIST
 leaq	_str12(%rip), %rsi
@@ -160,9 +181,9 @@ movl   _100(%rip), %eax
 cmp    %eax, %edx
 sete  %al
 movzbl	%al, %eax
-movl	%eax, _tempVar_6(%rip)
+movl	%eax, _tempVar_7(%rip)
 ## TAC_JUMP_FALSE
-movl   _tempVar_6(%rip), %eax
+movl   _tempVar_7(%rip), %eax
 cmpl   $1, %eax
 jne    _label_3
 ## TAC_PRINT_LIST
@@ -199,13 +220,41 @@ movq   %rsp, %rbp
 movl   _x(%rip), %edx
 movl	_1(%rip), %eax
 addl	%edx, %eax
-movl	%eax, _tempVar_7(%rip)
+movl	%eax, _tempVar_8(%rip)
 
 ## TAC_COPY
-movl   _tempVar_7(%rip), %eax
+movl   _tempVar_8(%rip), %eax
 movl	%eax, _x(%rip)
 ## TAC_RETURN
 movl   _x(%rip), %eax
+
+## TAC_FUNC_END
+popq   %rbp
+ret
+
+ ##TAC_UNKNOWN
+
+ ##TAC_UNKNOWN
+
+## TAC_FUNC_BEGIN
+.globl _carlos
+_carlos:
+pushq  %rbp
+movq   %rsp, %rbp
+
+## TAC_PRINT_LIST
+movl	_z(%rip), %eax
+movl	%eax, %esi
+leaq	.printintstring(%rip), %rdi
+movl	$0, %eax
+call	printf@PLT
+
+## TAC_PRINT_LIST
+movl	_b(%rip), %eax
+movl	%eax, %esi
+leaq	.printcharstring(%rip), %rdi
+movl	$0, %eax
+call	printf@PLT
 
 ## TAC_FUNC_END
 popq   %rbp
@@ -219,6 +268,7 @@ _0:	.long	0
 _1:	.long	1
 _2:	.long	2
 _5:	.long	5
+_8:	.long	8
 _tempVar_0:	.long	0
 _str12:	.string	"A era=15\n"
 	.zero
@@ -234,10 +284,13 @@ _tempVar_7:	.long	0
 _str7:	.string	"OK!\n"
 	.zero
 _10:	.long	10
+_tempVar_8:	.long	0
+_'k':	.long	'k'
 _str5:	.string	"a\n"
 	.zero
 _100:	.long	100
 _15:	.long	15
+_3f:	.long	3
 _str22:	.string	"Digite um numero: \n"
 	.zero
 _'A':	.long	'A'
@@ -262,4 +315,7 @@ _v:
 	.long	0
 	.long	0
 _matrix:
+_f:	.long	3
 _x:	.long	0
+_z:	.long	0
+_b:	.long	0

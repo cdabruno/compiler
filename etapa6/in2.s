@@ -1,32 +1,38 @@
 	.file	"in2.c"
 	.text
-	.globl	legal
+	.globl	x
 	.data
-	.align 16
-	.type	legal, @object
-	.size	legal, 20
-legal:
-	.long	1
-	.long	2
-	.long	3
-	.zero	8
+	.align 4
+	.type	x, @object
+	.size	x, 4
+x:
+	.long	1067030938
+	.globl	a
+	.align 4
+	.type	a, @object
+	.size	a, 4
+a:
+	.long	1067869798
+	.section	.rodata
+.LC0:
+	.string	"%f"
 	.text
 	.globl	main
 	.type	main, @function
 main:
 .LFB0:
-	.cfi_startproc
-	endbr64
+
 	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
 	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	movl	$1, %eax
+	movss	a(%rip), %xmm0
+	cvtss2sd	%xmm0, %xmm0
+	leaq	.LC0(%rip), %rdi
+	call	printf@PLT
+	movl	$0, %eax
 	popq	%rbp
-	.cfi_def_cfa 7, 8
+
 	ret
-	.cfi_endproc
+
 .LFE0:
 	.size	main, .-main
 	.ident	"GCC: (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0"

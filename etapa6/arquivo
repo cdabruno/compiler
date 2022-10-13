@@ -6,7 +6,7 @@ int a ('A');
 int i(1);
 int v[10] 'a' 0 0 0 0 0 0 0 0 0;
 int matrix[100]; 
-##float f (2,5);
+float f (3,5);
 
 \#
 This is a comment 
@@ -27,10 +27,15 @@ int main ()
 
   print "Digite um numero: \n";
   read a;
+  print f;
+  
+  
   print "Digite mais um numero: \n";
   read v[1];
 
-  while (i > 0)
+  a <- carlos(8 'k');
+
+  while (i < 0)
     {
     i <- incn(i);
     print "a\n";
@@ -50,6 +55,7 @@ int main ()
     }
   else
     print "OK!\n"; {{}}
+    
   }
 
 int incn (int x)
@@ -58,6 +64,7 @@ int incn (int x)
   return x
   }
 
-## end of file
-  
+int carlos(int z char b){
+  print z b;
+}
 

@@ -207,7 +207,7 @@ void generateASM(Tac *first){
                     fprintf(fout, "\n## TAC_PRINT_LIST\n"
                     "movl	_%s(%%rip), %%eax\n"
                     "movl	%%eax, %%esi\n"
-                    "leaq	.printfloatstring(%%rip), %%rdi\n"
+                    "leaq	.printintstring(%%rip), %%rdi\n"
                     "movl	$0, %%eax\n"
                     "call	printf@PLT\n", tac->result->name);
                 }

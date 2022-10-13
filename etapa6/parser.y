@@ -81,7 +81,12 @@ declaration_lst: declaration declaration_lst { $$ = createAstNode(AST_DECL, 0, $
     
 declaration: type_kw TK_IDENTIFIER '(' literal ')' ';' { $$ = createAstNode(AST_VAR_DEC, 0, $1, createAstNode(AST_IDENTIFIER, $2, 0, 0, 0, 0, getLineNumber()), $4, 0, getLineNumber()); 
                                                          char temp[30];
-                                                         sprintf(temp, "_%s:\t.long\t%s\n", $2->name, $4->hashReference->name);
+                                                         if($1->type == AST_KW_FLOAT){
+                                                            sprintf(temp, "_%s:\t.long\t%d\n", $2->name, (int) atof($4->hashReference->name));
+                                                         }
+                                                         else{
+                                                            sprintf(temp, "_%s:\t.long\t%s\n", $2->name, $4->hashReference->name);
+                                                         }
                                                          addToDeclaration(temp); }
     | type_kw TK_IDENTIFIER '[' LIT_INTEGER ']' literals_lst ';' { $$ = createAstNode(AST_ARR_DEC, 0, $1, createAstNode(AST_IDENTIFIER, $2, 0, 0, 0, 0, getLineNumber()), 
                                                                     createAstNode(AST_INT, $4, 0, 0, 0, 0, getLineNumber()), $6, getLineNumber()); 
@@ -106,7 +111,12 @@ type_kw: KW_CHAR { $$ = createAstNode(AST_KW_CHAR, 0, 0, 0, 0, 0, getLineNumber(
 
 literals_lst: literal literals_lst { $$ = createAstNode(AST_LIT_LIST, 0, $1, $2, 0, 0, getLineNumber()); 
                                     char temp[30];
-                                    sprintf(temp, "\t.long\t%s\n", $1->hashReference->name);
+                                    if($1->type == AST_FLOAT){
+                                        sprintf(temp, "\t.long\t%d\n", (int) atof($1->hashReference->name));
+                                    }
+                                    else{
+                                        sprintf(temp, "\t.long\t%s\n", $1->hashReference->name);
+                                    }
                                     addToArrDeclaration(temp);
                                     }
     | { $$ = 0; }

@@ -1,8 +1,9 @@
 #include <stdio.h>
 
-int legal[5] = {1, 2, 3};
+float x = 1.2;
+
 
 
 int main(){
-    return(1);
+    scanf("%f", x);
 }
